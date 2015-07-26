@@ -34,14 +34,12 @@ allData <- allSet[, wantedMeasures]
 colnames(allData) <- wantedMeasures.names
 allData <- cbind(allData, allSubjects, allLabels)
 
-
 #Use descriptive activity names to name the activities in the data set
 activityLabels <- read.table("UCI HAR Dataset/activity_labels.txt", header = FALSE)
 activityLabels[,2] <- as.character(activityLabels[,2])
 
 allData$activity <- factor(allData$activity, levels = activityLabels[,1], labels = activityLabels[,2])
 allData$subject <- as.factor(allData$subject)
-
 
 #Appropriately label the data set with descriptive variable names
 names(allData) <- gsub("^t", "time", names(allData))
@@ -50,7 +48,6 @@ names(allData) <- gsub('-mean', 'Mean', names(allData))
 names(allData) <- gsub('-std', 'Std', names(allData))
 names(allData) <- gsub('[-()]', '', names(allData))
 
-
 #Create a independent tidy data set with the average of each variable for each activity and each subject
 library(plyr)
 tidyData <- aggregate(. ~subject + activity, allData, mean)
@@ -58,4 +55,3 @@ tidyData <- tidyData[order(tidyData$subject,tidyData$activity),]
 
 #write to file
 write.table(tidyData, file = "tidydata.txt", row.name=FALSE, quote = FALSE)
-
